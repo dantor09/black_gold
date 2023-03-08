@@ -1,0 +1,134 @@
+body {
+    margin:40px auto;
+    max-width:650px;
+    line-height:1.6;
+    font-size:18px;
+    color:#444;
+    padding:0 10px
+}
+
+h1,h2,h3 {
+    line-height:1.2
+}
+
+h1 {
+    text-align: center;
+}
+
+nav {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+    margin-top: 20px;
+}
+
+.session {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#logo {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.signIn, .signup {
+	margin-top: 20px;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+.input_areas, #enter_session {
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+.signin_btn, .signup_btn {
+	margin-top: 5px;
+	margin-bottom: 25px;
+}
+
+.signInForm, .signupForm {
+	padding: 50px;
+	padding-top: 20px;
+	background-color: #1d2222;
+	color: white;
+	border-radius: 20px;
+}
+
+.darkLinks:link, .darkLinks:visited {
+	color: lightgray;
+}
+
+.darkLinks:active {
+	color: #65c74e;
+}
+
+.error {
+	color: red;
+	margin: 0px;
+}
+
+.nav_btn {
+	padding: 10px 40px;
+	border-radius: 15px;
+	text-decoration: none;
+}
+
+.nav_btn:link, .nav_btn:visited {
+	border-style: solid;
+	color: #1d2222;
+
+}
+
+.nav_btn:hover {
+	background-color: #1d2222;
+	color: white;
+}
+
+.nav_btn:active {
+	background-color: slategray;
+}
+
+#createbtn {
+	margin-top: 10px;
+	margin-bottom: -10px;
+	background-color: #1d2222;
+	color: white;
+	padding: 25px 75px;
+	font-size: 18;
+	cursor: pointer;
+	border-radius: 15px;
+}
+
+#createbtn:hover {
+	background-color: gray;
+}
+
+#createSessionDiv {
+	display: flex;
+	justify-content: center;
+}
+
+.mySessions {
+	display: flex;
+	justify-content: space-around;
+}
+
+.inSession {
+	padding: 10px 25px;
+	border-radius: 15px;
+
+}
+
+#enterSession {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+#emailPlaceholder {
+	width: 30%;
+}
