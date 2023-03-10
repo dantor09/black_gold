@@ -11,25 +11,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Session <?= $_SESSION['SessionID']?> | <?= $PROJECT_NAME?></title>
         <link rel="stylesheet" href="style.css">
-
     </head>
 <body>
-
     <div class>
         <a href="signin.php"><img src="payool_logo.png" id="logo"/></a>
-        <?php
-                require_once("nav.php");
-        ?>
+        <?php require_once("nav.php"); ?>
     </div>
-    <h2>
-    <?php
-        $fname = $_SESSION['fname'];
-        $lname = $_SESSION['lname'];
-    ?>
-    </h2>
-    <?php 
-        echo "<H2> You are the manager of this session </H2> <br>";
-    ?>
+    <?php echo "<H2> You are the manager of this session </H2> <br>"; ?>
     <?php
         $add_user_form = new PhpFormBuilder();
         $add_user_form->set_att("method", "POST");
@@ -43,8 +31,7 @@
         ), "email_input");
         $add_user_form->build_form();
         
-        if(!empty($_POST['email_input']) && isset($_POST['email_button']))
-        {
+        if(!empty($_POST['email_input']) && isset($_POST['email_button'])) {
             $db = get_mysqli_connection();
             $query_first_name = $db->prepare("SELECT FName 
             FROM UserProfile 
@@ -53,8 +40,7 @@
             $query_first_name->execute();
             $result = $query_first_name->get_result();
             $first_name = $result->fetch_all(MYSQLI_ASSOC);
-            if(!empty($first_name))
-            {
+            if(!empty($first_name)) {
                 $db = get_mysqli_connection();
                 $already_in_session = $db->prepare("SELECT FName FROM Joins Join UserProfile ON(Joins.UserID = UserProfile.UserID) WHERE SessionID = ?");
                 $already_in_session->bind_param('s', $_SESSION['SessionID']);
@@ -64,38 +50,17 @@
                 $found = false;
                 $index_count = 0;
                 //while statement to make add everyone listed
-                while($index_count < count($row_names) && !$found)
-                {
-                    if($row_names[$index_count]['FName'] == $first_name[0]['FName'])
-                    {
+                while($index_count < count($row_names) && !$found) {
+                    if($row_names[$index_count]['FName'] == $first_name[0]['FName']) {
                         $found = true;
                     }
                     $index_count++;
                 }
                 //check to see if user is in the session already
-                if($found)
-                {
+                if($found) {
                     echo "User is already in this paypool session <br>";
                 }
-                else{
-                    /*
-                    UPDATE Joins SET Percentage = (SELECT 100/count(UserID) from Joins where SessionID = 36) WHERE SessionID = '36';
-                    testing 12
-
-                    testing daniel
-                    testing daniel
-
-                    testing Mauricio
-
-                    1. if user is not in the session add the user into the session
-                    2. count the new number of users inside of that session (ie. 4)
-                    3. determine the percentage of the total users to the 2nd decimal ( ie. 100/4 = 25..) select round(40,2) = 40.00
-                    4. change percentage of given SessionID that just added user to the same session 
-                        (ie.    UPDATE Joins
-                                SET Percentage = new percentage
-                                WHERE SessionID = $_POST[SessionID];
-                     )
-                    */
+                else {
                     $db = get_mysqli_connection();
                     $name = $db->prepare("SELECT UserID FROM UserProfile WHERE FName = ?");
                     $name->bind_param('s', $first_name[0]['FName']);
@@ -107,17 +72,12 @@
                     $query->bind_param('ss', $user_id[0]['UserID'], $_SESSION['SessionID']);
                     $query->execute();
                     echo $first_name[0]['FName']. " was added successfully <br>";
-                    $query->close();
-
-                    
+                    $query->close();  
                 }
-                    
-
             }   
-            else{
+            else {
                 echo "User does not exist <br>";
             }
-
         }
 
         $db = get_mysqli_connection();
@@ -131,8 +91,7 @@
         $db = get_mysqli_connection();
         $query = $db->prepare("CALL GetMembers(?)");
         $query->bind_param('s', $_SESSION['SessionID']);
-        if($query->execute())
-        {
+        if($query->execute()) {
             $result = $query->get_result();
             $rows = $result->fetch_all(MYSQLI_ASSOC);
             echo "You have " . count($rows) . " users in session: " . $_SESSION['SessionID'];
@@ -140,14 +99,12 @@
             $query->close();
             echo "<br><br>";
         }
-        else
-        {
+        else {
             echo "Error: " . mysqli_error();
             echo "Additinal Error: " . mysqli_errno();
             echo "Even more errors: " . $query->error;
         }
     ?>
-
     <form method="POST">
         <label for="category">Transaction Category:</label>
         <select name="category" id="category">
@@ -177,10 +134,8 @@
     </form>
 
     <?php
-        if(isset($_POST["Submit"]) && !empty($_POST["item"]) && !empty($_POST["price"]))
-        {
-            if(!$_POST["date"])
-            {
+        if(isset($_POST["Submit"]) && !empty($_POST["item"]) && !empty($_POST["price"])) {
+            if(!$_POST["date"]) {
                 date_default_timezone_set('America/Los_Angleles');
                 $_POST["date"] = date('Y-m-d H:i');
             }
@@ -188,12 +143,11 @@
             $db = get_mysqli_connection();
             $stmt = $db->prepare("CALL AddTransaction (?,?,?,?,?,?)");
             $stmt->bind_param('sssssd',$_SESSION['userid'], $_SESSION['SessionID'], $_POST['category'], $_POST["date"],$_POST["item"], $_POST["price"]);
-            if($stmt->execute()){    
+            if($stmt->execute()) {    
                 echo "Transaction added successfully <br>";
                 $stmt->close();
             }
-            else
-            {
+            else {
                 echo "Transaction not added<br>";
                 echo "Error: " . $stmt->error . "<br>";
             }
@@ -201,123 +155,102 @@
     ?>
     <br>
     <div class="">
-    <h2></h2>
-    <br>
-    <?php
-        $remove_transaction_form = new PhpFormBuilder();
-        $remove_transaction_form->set_att("method", "POST");
-        $remove_transaction_form->add_input("transaction", array(
-            "type" => "submit",
-            "value" => "Remove Transaction"
-        ), "remove_transaction_button");
-        $remove_transaction_form-> add_input("Transaction", array(
-            "type" => "text",
-            "placeholder" => "9"
-        ), "transaction_input");
-        $remove_transaction_form->build_form();
-        
-        if(!empty($_POST['transaction_input']) && isset($_POST['remove_transaction_button'])) {
+        <h2></h2>
+        <br>
+        <?php
+            $remove_transaction_form = new PhpFormBuilder();
+            $remove_transaction_form->set_att("method", "POST");
+            $remove_transaction_form->add_input("transaction", array(
+                "type" => "submit",
+                "value" => "Remove Transaction"
+            ), "remove_transaction_button");
+            $remove_transaction_form-> add_input("Transaction", array(
+                "type" => "text",
+                "placeholder" => "9"
+            ), "transaction_input");
+            $remove_transaction_form->build_form();
+            
+            if(!empty($_POST['transaction_input']) && isset($_POST['remove_transaction_button'])) {
+                $db = get_mysqli_connection();
+                $remove_transaction = $db->prepare("CALL RemoveTransaction(?,?)");
+                $remove_transaction->bind_param('ss',$_POST['transaction_input'], $_SESSION['SessionID']);
+                $remove_transaction->execute();
+            }
+        ?> 
+        <?php  
             $db = get_mysqli_connection();
-            $remove_transaction = $db->prepare("CALL RemoveTransaction(?,?)");
-            $remove_transaction->bind_param('ss',$_POST['transaction_input'], $_SESSION['SessionID']);
-            $remove_transaction->execute();
-        }
-    ?> 
-     <?php  
-        $db = get_mysqli_connection();
-        $query = $db->prepare("CALL GetTransactions(?)");        
-        $query->bind_param('s', $_SESSION['SessionID']);
-        if($query->execute()) {
-            $result = $query->get_result();
-            $rows = $result->fetch_all(MYSQLI_ASSOC);
-            if(count($rows) > 1 || count($rows) == 0) {
-                echo "There are " . count($rows) . " transactions";
+            $query = $db->prepare("CALL GetTransactions(?)");        
+            $query->bind_param('s', $_SESSION['SessionID']);
+            if($query->execute()) {
+                $result = $query->get_result();
+                $rows = $result->fetch_all(MYSQLI_ASSOC);
+                if(count($rows) > 1 || count($rows) == 0) {
+                    echo "There are " . count($rows) . " transactions";
+                }
+                else { 
+                    echo "There is " . count($rows) . " transaction";
+                }
+            
+                echo makeTable($rows);
+                $query->close();
             }
-            else { 
-                echo "There is " . count($rows) . " transaction";
+            else {
+                echo "Error: " . mysqli_error();
+                echo "Additinal Error: " . mysqli_errno();
+                echo "Even more errors: " . $query->error;
             }
-         
-            echo makeTable($rows);
-            $query->close();
-        }
-        else {
-            echo "Error: " . mysqli_error();
-            echo "Additinal Error: " . mysqli_errno();
-            echo "Even more errors: " . $query->error;
-        }
         ?>
         <h2></h2><h2></h2>
         <?php
-        //$insert_form = new PhpFormBuilder();
-        //$insert_form->set_att("method", "POST");
-        //$insert_form->add_input("Insert", array(
-        //    "type" => "submit",
-        //    "value" => "Create New Group"
-        //), "createbtn");
-        //$insert_form->build_form();
-//
-        //if (isset($_POST["createbtn"])) 
-        //{
-        //    $db = get_mysqli_connection();
-        //    $query = $db->prepare("INSERT INTO PaypoolSession (UserID) VALUES (?)");
-        //    $query->bind_param('s', $_SESSION['userid']);
-        //    if ($query->execute()){    
-        //        header( "Location: " . $_SERVER['PHP_SELF']);
-        //    }
-        //    else {
-        //        echo "Error inserting: " . mysqli_error();
-        //    }
-        //}
+            $delete_form = new PhpFormBuilder();
+            $delete_form->set_att("method", "POST");
+            $delete_form->add_input("Insert", array(
+                "type" => "submit",
+                "value" => "Delete this Paypool Session - WARNING: IRREVERSIBLE"
+            ), "delete_id");
+            $delete_form->build_form();
 
-        $delete_form = new PhpFormBuilder();
-        $delete_form->set_att("method", "POST");
-        $delete_form->add_input("Insert", array(
-            "type" => "submit",
-            "value" => "Delete this Paypool Session - WARNING: IRREVERSIBLE"
-        ), "delete_id");
-        $delete_form->build_form();
+            if (isset($_POST["delete_id"])) {
+                $db = get_mysqli_connection();
+                $query2 = $db->prepare("DELETE FROM Joins WHERE SessionID = (?)");
+                $query2->bind_param("s", $_SESSION['SessionID']);
+                if($query2->execute()) {
+                    $query2->close();
+                    $_SESSION["affected_rows"] = $db->affected_rows;
+                } 
+                else {
+                    echo "Error: " . mysqli_error();
+                    echo "Additinal Error: " . mysqli_errno();
+                    echo "Even more errors: " . $query2->error;
+                }
 
-        if (isset($_POST["delete_id"])) {
-            $db = get_mysqli_connection();
-            $query2 = $db->prepare("DELETE FROM Joins WHERE SessionID = (?)");
-            $query2->bind_param("s", $_SESSION['SessionID']);
-            if($query2->execute()) {
-                $query2->close();
-                $_SESSION["affected_rows"] = $db->affected_rows;
-            } 
-            else {
-                echo "Error: " . mysqli_error();
-                echo "Additinal Error: " . mysqli_errno();
-                echo "Even more errors: " . $query2->error;
+                $query3 = $db->prepare("UPDATE Transaction SET SessionID = 1 WHERE SessionID = (?)");
+                $query3->bind_param("s", $_SESSION['SessionID']);
+                if($query3->execute()) {
+                    $query3->close();
+                    $_SESSION['affected_rows'] = $db->affected_rows;
+                } 
+                else {
+                    echo "Error: " . mysqli_error();
+                    echo "Additinal Error: " . mysqli_errno();
+                    echo "Even more errors: " . $query3->error;
+                }
+
+                $query1 = $db->prepare("delete from PaypoolSession where SessionID = ?");
+                $query1->bind_param("s", $_SESSION['SessionID']);
+                if($query1->execute()) {
+                    $query1->close();
+                    $_SESSION["affected_rows"] = $db->affected_rows;
+                    $_SESSION['SessionID'] = NULL;
+                    header("Location: dashboard.php");
+                } 
+                else {
+                    echo "Error: " . mysqli_error();
+                    echo "Additinal Error: " . mysqli_errno();
+                    echo "Even more errors: " . $query1->error;
+                }
             }
-
-            $query3 = $db->prepare("UPDATE Transaction SET SessionID = 1 WHERE SessionID = (?)");
-            $query3->bind_param("s", $_SESSION['SessionID']);
-            if($query3->execute()) {
-                $query3->close();
-                $_SESSION['affected_rows'] = $db->affected_rows;
-            } 
-            else {
-                echo "Error: " . mysqli_error();
-                echo "Additinal Error: " . mysqli_errno();
-                echo "Even more errors: " . $query3->error;
-            }
-
-            $query1 = $db->prepare("delete from PaypoolSession where SessionID = ?");
-            $query1->bind_param("s", $_SESSION['SessionID']);
-            if($query1->execute()) {
-                $query1->close();
-                $_SESSION["affected_rows"] = $db->affected_rows;
-                $_SESSION['SessionID'] = NULL;
-                header("Location: dashboard.php");
-            } 
-            else {
-                echo "Error: " . mysqli_error();
-                echo "Additinal Error: " . mysqli_errno();
-                echo "Even more errors: " . $query1->error;
-            }
-        }
-    ?> 
+        ?> 
     </div>
     
     <?php  
