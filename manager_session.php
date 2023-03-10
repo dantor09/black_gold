@@ -6,13 +6,13 @@
 ?>
 
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Session <?= $_SESSION['SessionID']?> | <?= $PROJECT_NAME?></title>
-    <link rel="stylesheet" href="style.css">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Session <?= $_SESSION['SessionID']?> | <?= $PROJECT_NAME?></title>
+        <link rel="stylesheet" href="style.css">
 
-</head>
+    </head>
 <body>
 
     <div class>
@@ -201,10 +201,7 @@
     ?>
     <br>
     <div class="">
- 
-
     <h2></h2>
-   
     <br>
     <?php
         $remove_transaction_form = new PhpFormBuilder();
@@ -219,8 +216,7 @@
         ), "transaction_input");
         $remove_transaction_form->build_form();
         
-        if(!empty($_POST['transaction_input']) && isset($_POST['remove_transaction_button']))
-        {
+        if(!empty($_POST['transaction_input']) && isset($_POST['remove_transaction_button'])) {
             $db = get_mysqli_connection();
             $remove_transaction = $db->prepare("CALL RemoveTransaction(?,?)");
             $remove_transaction->bind_param('ss',$_POST['transaction_input'], $_SESSION['SessionID']);
@@ -231,23 +227,20 @@
         $db = get_mysqli_connection();
         $query = $db->prepare("CALL GetTransactions(?)");        
         $query->bind_param('s', $_SESSION['SessionID']);
-        if($query->execute())
-        {
+        if($query->execute()) {
             $result = $query->get_result();
             $rows = $result->fetch_all(MYSQLI_ASSOC);
-            if(count($rows) > 1 || count($rows) == 0){
+            if(count($rows) > 1 || count($rows) == 0) {
                 echo "There are " . count($rows) . " transactions";
             }
-            else
-            { 
+            else { 
                 echo "There is " . count($rows) . " transaction";
             }
          
             echo makeTable($rows);
             $query->close();
         }
-        else
-        {
+        else {
             echo "Error: " . mysqli_error();
             echo "Additinal Error: " . mysqli_errno();
             echo "Even more errors: " . $query->error;
@@ -284,16 +277,15 @@
         ), "delete_id");
         $delete_form->build_form();
 
-        if (isset($_POST["delete_id"])) 
-        {
+        if (isset($_POST["delete_id"])) {
             $db = get_mysqli_connection();
             $query2 = $db->prepare("DELETE FROM Joins WHERE SessionID = (?)");
             $query2->bind_param("s", $_SESSION['SessionID']);
-            if($query2->execute())
-            {
+            if($query2->execute()) {
                 $query2->close();
                 $_SESSION["affected_rows"] = $db->affected_rows;
-            } else {
+            } 
+            else {
                 echo "Error: " . mysqli_error();
                 echo "Additinal Error: " . mysqli_errno();
                 echo "Even more errors: " . $query2->error;
@@ -301,11 +293,11 @@
 
             $query3 = $db->prepare("UPDATE Transaction SET SessionID = 1 WHERE SessionID = (?)");
             $query3->bind_param("s", $_SESSION['SessionID']);
-            if($query3->execute())
-            {
+            if($query3->execute()) {
                 $query3->close();
                 $_SESSION['affected_rows'] = $db->affected_rows;
-            } else {
+            } 
+            else {
                 echo "Error: " . mysqli_error();
                 echo "Additinal Error: " . mysqli_errno();
                 echo "Even more errors: " . $query3->error;
@@ -313,13 +305,13 @@
 
             $query1 = $db->prepare("delete from PaypoolSession where SessionID = ?");
             $query1->bind_param("s", $_SESSION['SessionID']);
-            if($query1->execute())
-            {
+            if($query1->execute()) {
                 $query1->close();
                 $_SESSION["affected_rows"] = $db->affected_rows;
                 $_SESSION['SessionID'] = NULL;
                 header("Location: dashboard.php");
-            } else {
+            } 
+            else {
                 echo "Error: " . mysqli_error();
                 echo "Additinal Error: " . mysqli_errno();
                 echo "Even more errors: " . $query1->error;
@@ -340,15 +332,13 @@
             WHERE Joins.SessionID = ? AND  Transaction.SessionID = ?");
         $totalquery->bind_param("ss", $_SESSION['SessionID'], $_SESSION['SessionID']);
 
-        if($totalquery->execute())
-        {
+        if($totalquery->execute()) {
             $result = $totalquery->get_result();
             $data = $result->fetch_all(MYSQLI_ASSOC);
             $totaldue = number_format($data[0]['Total'],2);
             $totalquery->close();
         } 
-        else 
-        {
+        else {
             echo "Error: " . mysqli_error();
             echo "Additinal Error: " . mysqli_errno();
             echo "Even more errors: " . $totalquery->error;
@@ -359,15 +349,13 @@
             WHERE SessionID = ?");
         $totalquery2->bind_param("s", $_SESSION['SessionID']);
 
-        if($totalquery2->execute())
-        {
+        if($totalquery2->execute()) {
             $result = $totalquery2->get_result();
             $data = $result->fetch_all(MYSQLI_ASSOC);
             $totaldue2 = number_format($data[0]['Total'],2);
             $totalquery2->close();
         } 
-        else 
-        {
+        else {
             echo "Error: " . mysqli_error();
             echo "Additinal Error: " . mysqli_errno();
             echo "Even more errors: " . $totalquery2->error;
@@ -379,9 +367,6 @@
         echo "<h2>Total Each Member Owes to Session: $"; 
         echo $totaldue;
         echo"</h2>";
-
-
-
     ?> 
 
 </body>
