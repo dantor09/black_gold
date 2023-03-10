@@ -17,7 +17,7 @@
 
 <body>
     <div>
-	    <a href="signin.php"><img src="payool_logo.png" id="logo"/></a>
+	    <a href="signin.php"><img src="black_gold_logo.png" id="logo"/></a>
 	    <?php
 		    require("nav.php");
 	    ?>
@@ -70,7 +70,7 @@
 				<br>
 				<input class = "signin_btn" type = "submit" value="Log In"/>
 			</form>
-			<a class="darkLinks" href="signup.php">Create a free Paypool Account</a>
+			<a class="darkLinks" href="signup.php">Create a Black Gold AI account</a>
         </div>
     <?php }
         if($passworderror){

@@ -28,7 +28,7 @@
 <body>
 
     <div class>
-        <a href="signin.php"><img src="payool_logo.png" id="logo"/></a>
+        <a href="signin.php"><img src="black_gold_logo.png" id="logo"/></a>
         <?php require_once("nav.php");?>
     </div>
 
@@ -47,7 +47,7 @@
         $insert_form->set_att("method", "POST");
         $insert_form->add_input("Insert", array(
             "type" => "submit",
-            "value" => "Create New Session"
+            "value" => "Submit Core Image"
         ), "createbtn");
 
         $insert_form->build_form();
@@ -69,7 +69,7 @@
 
 <hr>
 
-    <h2>My Sessions</h2>
+    <h2>My Core Sessions</h2>
     <div class="sessionContainer">
         <div class="mySessions">
             <div class="inSession"> 

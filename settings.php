@@ -16,7 +16,7 @@ if(!isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == false){
 <body>
     
 	<div class>
-        <a href="signin.php"><img src="payool_logo.png" id="logo"/></a>
+        <a href="signin.php"><img src="black_gold_logo.png" id="logo"/></a>
 		<?php require_once "nav.php";?>
     </div>
 
